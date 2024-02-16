@@ -40,7 +40,7 @@ def main():
                 transcribe(audio, output, model=sys.argv[1])
             except RuntimeError:
                 sys.exit(
-                    "Check spelling, location and extension of your file and try again"
+                    "Check spelling, location and extension of your file and try again - sys.argv"
                 )
             except FileNotFoundError:
                 sys.exit(1)
@@ -58,14 +58,15 @@ def main():
             transcribe(audio, output)
         except RuntimeError:
             sys.exit(
-                "Check spelling, location and extension of your file and try again"
+                "Check spelling, location and extension of your file and try again - no model input"
             )
         except FileNotFoundError:
-            sys.exit(1)
+            sys.exit("File not found")
         except Exception as e:
-            sys.exit(1)
+            sys.exit(f"An unexpected error ocurred transcribing: {e}")
         pass
-
+    
+    print("Count confirm next:")
     count_confirmation = (
         input("Would you like to count the appeareance of any particular word? y/n ")
         .strip()
@@ -114,12 +115,16 @@ def media_to_mp3():
             print(f"Unsupported URL: {video_url}", file=sys.stderr)
             sys.exit(1)
 
-    return f"{info['fulltitle']}.m4a"
+    # Replaces characters in string for '#' as Postprocessor class does it in yt-dlp
+    title = re.sub(r"[<>:\"\\|?*\/]+", "#", info["fulltitle"])
+
+    return f"{title}.m4a"
 
 
 def transcribe(file_name, output_name, model="base"):
     # Loads model / creates model object
     print(f"Using model {model}")
+    print(f"filename: {file_name}")
     model = whisper.load_model(model)
     try:
         result = model.transcribe(file_name)
