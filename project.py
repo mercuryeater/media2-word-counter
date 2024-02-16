@@ -28,7 +28,7 @@ def main():
         audio = input("Audio file: ")
 
     while True:
-        output = input("Output .txt and .csv name: ")
+        output = input("Output .txt and .csv name: ").strip()
         if re.search(r"^[^<>:\"\'\\|?*\/]+$", output):
             break
 
@@ -115,7 +115,7 @@ def media_to_mp3():
             sys.exit(1)
 
     # Replaces characters in string for '#' as Postprocessor class does it in yt-dlp
-    title = re.sub(r"[<>:\"\\|?*\/]+", "#", info["fulltitle"])
+    title = re.sub(r"[<>:\"\\|?*\/]", "#", info["fulltitle"])
 
     return f"{title}.m4a"
 
