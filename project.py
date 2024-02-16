@@ -65,8 +65,7 @@ def main():
         except Exception as e:
             sys.exit(f"An unexpected error ocurred transcribing: {e}")
         pass
-    
-    print("Count confirm next:")
+
     count_confirmation = (
         input("Would you like to count the appeareance of any particular word? y/n ")
         .strip()
@@ -124,7 +123,6 @@ def media_to_mp3():
 def transcribe(file_name, output_name, model="base"):
     # Loads model / creates model object
     print(f"Using model {model}")
-    print(f"filename: {file_name}")
     model = whisper.load_model(model)
     try:
         result = model.transcribe(file_name)
@@ -140,7 +138,7 @@ def transcribe(file_name, output_name, model="base"):
 
     segments = result["segments"]
 
-    with open(f"{output_name}.txt", "w") as file:
+    with open(f"{output_name}.txt", "w", encoding="utf-8") as file:
         for s in segments:
             file.write(s["text"] + "\n")
 
@@ -170,7 +168,7 @@ def words_frequency(output_name):
     text_file = f"{output_name}.txt"
     words_freq = {}
     try:
-        with open(text_file) as file:
+        with open(text_file, encoding="utf-8") as file:
             for line in file:
                 split_words = re.split(r"(?:[^\w']| )+", line)
                 clean_words = [
@@ -189,7 +187,7 @@ def words_frequency(output_name):
     sorted_words = sorted(words_freq.items(), key=lambda item: item[1], reverse=True)
     sorted_words.insert(0, ["word", "frequency"])
 
-    with open(f"{output_name}.csv", "w", newline="") as csv_file:
+    with open(f"{output_name}.csv", "w", newline="", encoding="utf-8") as csv_file:
         writer = csv.writer(csv_file)
         for word in sorted_words:
             writer.writerow(word)
