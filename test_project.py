@@ -4,12 +4,13 @@ import unittest.mock as mock
 import os
 import yt_dlp
 
-invalid_format = "bob.jpg"
-valid_audio = "test_audio.mp3"
-short_audio = "test2.m4a"
-out_name = "test_output"
-out_name2 = "test2_output"
+invalid_format = "test/bob.jpg"
+valid_audio = "test/test_audio.mp3"
+short_audio = "test/test2.m4a"
+out_name = "test/test_output"
+out_name2 = "test/test2_output"
 word = "support"
+test_count_arg = "test/test_output"
 url_media = "https://www.youtube.com/shorts/vryFBIuVkbo"
 no_media = "https://github.com/yt-dlp/yt-dlp"
 
@@ -37,10 +38,10 @@ def test_transcribe():
 
 def test_count():
     with mock.patch("builtins.input", return_value="support"):
-        assert count("test_output") == "The word 'support' appears 11 times."
+        assert count(test_count_arg) == "The word 'support' appears 11 times."
 
     with mock.patch("builtins.input", side_effect=["citizens"]):
-        assert count("test_output") == "The word 'citizens' appears 2 times."
+        assert count(test_count_arg) == "The word 'citizens' appears 2 times."
 
     with mock.patch("builtins.input", return_value="blah"):
         with pytest.raises(FileNotFoundError):
