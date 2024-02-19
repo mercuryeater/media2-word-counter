@@ -1,6 +1,7 @@
 import csv
 import re
 import sys
+import os
 from tabulate import tabulate
 import whisper
 import yt_dlp
@@ -114,8 +115,12 @@ def media_to_mp3():
             print(f"Unsupported URL: {video_url}", file=sys.stderr)
             sys.exit(1)
 
-    # Replaces characters in string for '#' as Postprocessor class does it in yt-dlp
-    title = re.sub(r"[<>:\"\\|?*\/]", "#", info["fulltitle"])
+    # Checks if it's on Windows(nt) or a Unix(linux-MacOs) system:
+    if os.name == "nt":
+        # Replaces characters in string for '#' as Postprocessor class does it in yt-dlp
+        title = re.sub(r"[<>:\"\\|?*\/]", "#", info["fulltitle"])
+    elif os.name == "posix":
+        title = re.sub(r"[:\/]", "#", info["fulltitle"])
 
     return f"{title}.m4a"
 
